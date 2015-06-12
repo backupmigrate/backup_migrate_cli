@@ -1,0 +1,36 @@
+{
+    "name": "backupmigrate/cli",
+    "description": "Backup and Migrate CLI",
+    "autoload": {
+        "psr-4": {
+            "BackupMigrate\\CLI\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ronan Dowling"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/backupmigrate/backup_migrate_core"
+        }
+    ],
+    "require": {
+      "php": ">=5.4.0",
+      "backupmigrate/core": "dev-master",
+      "symfony/console": "2.7.1",
+      "psr/log": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "phpunit/dbunit": "dev-master",
+        "mikey179/vfsStream": "1.*"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BackupMigrate\\CLI\\Tests\\": "tests"
+        }
+    }
+}
