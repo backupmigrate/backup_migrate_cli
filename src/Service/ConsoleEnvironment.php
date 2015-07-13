@@ -7,9 +7,8 @@
 
 namespace BackupMigrate\CLI\Service;
 
-use BackupMigrate\Core\Services\EnvironmentBase;
-use BackupMigrate\Core\Services\TempFileAdapter;
-use BackupMigrate\Core\Services\TempFileManager;
+use BackupMigrate\Core\Environment\EnvironmentBase;
+use BackupMigrate\Core\File\TempFileAdapter;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -24,7 +23,7 @@ class ConsoleEnvironment extends EnvironmentBase {
    */
   function __construct(OutputInterface $out) {
     $logger = new ConsoleLogger($out);
-    $files = new TempFileManager(new TempFileAdapter('/tmp'));
+    $files = new TempFileAdapter('/tmp');
     parent::__construct($files, NULL, NULL, $logger);
   }
 }
