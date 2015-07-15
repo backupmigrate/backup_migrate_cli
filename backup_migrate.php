@@ -7,7 +7,7 @@ require __DIR__.'/vendor/autoload.php';
 use BackupMigrate\Core\Config\Config;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Output\StreamOutput;
-use BackupMigrate\Core\Services\BackupMigrate;
+use BackupMigrate\Core\Service\BackupMigrate;
 use BackupMigrate\Core\Destination\StreamDestination;
 use BackupMigrate\CLI\Service\ConsoleEnvironment;
 use BackupMigrate\CLI\Command\BackupCommand;

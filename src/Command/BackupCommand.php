@@ -6,7 +6,7 @@
 
 namespace BackupMigrate\CLI\Command;
 
-use BackupMigrate\Core\Services\BackupMigrate;
+use BackupMigrate\Core\Service\BackupMigrate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,7 +20,7 @@ class BackupCommand extends Command {
   protected $bam;
 
   /**
-   * @param \BackupMigrate\Core\Services\BackupMigrate $bam
+   * @param \BackupMigrate\Core\Service\BackupMigrate $bam
    * @param null $name
    */
   public function __construct(BackupMigrate $bam, $name = NULL) {
