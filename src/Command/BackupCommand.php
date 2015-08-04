@@ -6,7 +6,7 @@
 
 namespace BackupMigrate\CLI\Command;
 
-use BackupMigrate\Core\Service\BackupMigrate;
+use BackupMigrate\Core\Main\BackupMigrate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

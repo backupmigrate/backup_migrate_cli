@@ -5,34 +5,57 @@
 require __DIR__.'/vendor/autoload.php';
 
 use BackupMigrate\Core\Config\Config;
+use BackupMigrate\Core\File\TempFileManager;
+use BackupMigrate\Core\Filter\CompressionFilter;
+use BackupMigrate\Core\Filter\FileNamer;
+use BackupMigrate\Core\Plugin\PluginManager;
+use BackupMigrate\Core\Service\ServiceLocator;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\StreamOutput;
-use BackupMigrate\Core\Service\BackupMigrate;
+use BackupMigrate\Core\Main\BackupMigrate;
 use BackupMigrate\Core\Destination\StreamDestination;
-use BackupMigrate\CLI\Service\ConsoleEnvironment;
+use BackupMigrate\Core\File\TempFileAdapter;
 use BackupMigrate\CLI\Command\BackupCommand;
 
 // Load up the config file for the database settings.
 $config = require './config.php';
 
 $output = new StreamOutput(fopen('php://stderr', 'w'));
-$env = new ConsoleEnvironment($output);
-$bam = new BackupMigrate($env, new Config($config['config']));
+
+// Create the service locator
+$services = new ServiceLocator();
+$services->add('Logger',
+  new ConsoleLogger($output)
+);
+
+$services->add('TempFileManager',
+  new TempFileManager(new TempFileAdapter('/tmp'))
+);
+
+// Create the plugin manager
+$plugins = new PluginManager($services);
 
 // Load the plugins specified in the config.
 foreach ($config['plugins'] as $id => $plugin) {
-  $bam->plugins()->add(
+  $plugins->add(
     new $plugin['type'](new Config($plugin['config'])),
     $id
   );
 }
 // Add the stdout destination
-$bam->plugins()->add(
+$plugins->add(
   new StreamDestination(new Config(['streamuri' => 'php://stdout'])),
   'stdout'
 );
-$bam->plugins()->add(new \BackupMigrate\Core\Filter\CompressionFilter(), 'compression');
-$bam->plugins()->add(new \BackupMigrate\Core\Filter\FileNamer(), 'name');
+$plugins->add(new CompressionFilter(), 'compression');
+$plugins->add(new FileNamer(), 'name');
+
+// Configure the plugins
+$plugins->setConfig(new Config($config['config']));
+
+// Create the service object.
+$bam = new BackupMigrate($plugins);
 
 $application = new Application();
 $application->add(new BackupCommand($bam));
