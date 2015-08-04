@@ -39,17 +39,17 @@ $plugins = new PluginManager($services);
 // Load the plugins specified in the config.
 foreach ($config['plugins'] as $id => $plugin) {
   $plugins->add(
-    new $plugin['type'](new Config($plugin['config'])),
-    $id
+    $id,
+    new $plugin['type'](new Config($plugin['config']))
   );
 }
 // Add the stdout destination
 $plugins->add(
-  new StreamDestination(new Config(['streamuri' => 'php://stdout'])),
-  'stdout'
+  'stdout',
+  new StreamDestination(new Config(['streamuri' => 'php://stdout']))
 );
-$plugins->add(new CompressionFilter(), 'compression');
-$plugins->add(new FileNamer(), 'name');
+$plugins->add('compression', new CompressionFilter());
+$plugins->add('name', new FileNamer());
 
 // Configure the plugins
 $plugins->setConfig(new Config($config['config']));
@@ -60,3 +60,5 @@ $bam = new BackupMigrate($plugins);
 $application = new Application();
 $application->add(new BackupCommand($bam));
 $application->run(null, $output);
+
+$bam->plugins()->setConfig(['db' => []]);
